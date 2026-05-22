@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-zoom-blue: #0b5cff;
+  --color-zoom-blue-hover: #094dd6;
+  --color-zoom-orange: #ff742e;
+  --color-zoom-orange-hover: #e05616;
+  --color-zoom-dark: #1a1a1a;
+  --color-zoom-gray: #f7f9fa;
+  --color-zoom-text: #222222;
+  --color-zoom-border: #e5e5e5;
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #222222;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
