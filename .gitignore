@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SECRETS & ENVIRONMENT — NEVER COMMIT THESE
+# ─────────────────────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+.env.production.local
+.env.development.local
+.env.test.local
+*.pem
+*.key
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BACKEND (Python / FastAPI)
+# ─────────────────────────────────────────────────────────────────────────────
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/.pytest_cache/
+backend/zoom_clone.db          # SQLite database — local dev only, not for VCS
+backend/zoom_clone.db-wal      # SQLite WAL journal file
+backend/zoom_clone.db-shm      # SQLite shared memory file
+backend/.python-version
+backend/test_*.py              # Test scripts
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FRONTEND (Next.js / Node)
+# ─────────────────────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/coverage/
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OS / EDITOR
+# ─────────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MISC
+# ─────────────────────────────────────────────────────────────────────────────
+scratch/
+*.log

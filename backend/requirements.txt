@@ -1,0 +1,37 @@
+# Zoom Clone — Backend Python Dependencies
+# Generated from venv/pip freeze, pruned to production-only packages.
+# Install with: pip install -r requirements.txt
+
+# ── Web framework ──────────────────────────────────────────────────────────────
+fastapi==0.136.1
+starlette==1.0.0
+
+# ── ASGI server ────────────────────────────────────────────────────────────────
+uvicorn==0.47.0
+uvloop==0.22.1          # High-performance event loop (Linux/macOS only)
+httptools==0.7.1        # Fast HTTP parsing for uvicorn
+websockets==16.0        # WebSocket support
+
+# ── Database / ORM ─────────────────────────────────────────────────────────────
+SQLAlchemy==2.0.49
+
+# ── Data validation ────────────────────────────────────────────────────────────
+pydantic==2.13.4
+pydantic_core==2.46.4
+annotated-types==0.7.0
+
+# ── Authentication ─────────────────────────────────────────────────────────────
+PyJWT==2.13.0
+pycryptodome==3.23.0    # Cryptographic primitives for password hashing
+
+# ── Environment / Config ───────────────────────────────────────────────────────
+python-dotenv==1.2.2
+
+# ── Async / Runtime ────────────────────────────────────────────────────────────
+anyio==4.13.0
+typing_extensions==4.15.0
+
+# ── Misc ───────────────────────────────────────────────────────────────────────
+click==8.4.0            # CLI utilities (uvicorn dependency)
+h11==0.16.0             # HTTP/1.1 protocol library
+greenlet==3.5.1         # Required by SQLAlchemy for sync operations
