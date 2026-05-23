@@ -12,21 +12,21 @@ A production-ready Zoom-inspired video conferencing application built with **Nex
 
 ## ✨ Features
 
-- 🎥 **Real-time Video & Audio** — Peer-to-peer streaming via Zego WebRTC
-- 🏠 **Waiting Room** — Guests wait until the host admits them
-- 💬 **In-meeting Chat** — Public broadcast + private DM messaging
-- 😀 **Emoji Reactions** — Floating animated emoji overlays
-- ✋ **Hand Raise** — Guests can signal to the host
-- 🎙️ **Host Controls** — Mute all, mute individual, admit/kick participants, end meeting
-- 📅 **Meeting Scheduler** — Schedule future meetings with date/time
-- ⏰ **Smart Meeting Alerts** — Orange "Start Now" banner for overdue meetings
-- 🔒 **JWT Authentication** — Secure host sessions with anonymous guest fallback
-- 📱 **Fully Responsive** — Mobile-first design, works on phones, tablets, desktop
-- 🦊 **Firefox Compatible** — 3-stage media acquisition strategy for Firefox's WASM bug
+- **Real-time Video & Audio** — Peer-to-peer streaming via Zego WebRTC
+- **Waiting Room** — Guests wait until the host admits them
+- **In-meeting Chat** — Public broadcast + private DM messaging
+- **Emoji Reactions** — Floating animated emoji overlays
+- **Hand Raise** — Guests can signal to the host
+- **Host Controls** — Mute all, mute individual, admit/kick participants, end meeting
+- **Meeting Scheduler** — Schedule future meetings with date/time
+- **Smart Meeting Alerts** — Orange "Start Now" banner for overdue meetings
+- **JWT Authentication** — Secure host sessions with anonymous guest fallback
+- **Fully Responsive** — Mobile-first design, works on phones, tablets, desktop
+- **Firefox Compatible** — 3-stage media acquisition strategy for Firefox's WASM bug
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 The project uses **two separate communication planes** — the same architecture that Zoom uses:
 
@@ -270,7 +270,6 @@ Password: password123
 | `REACTION` | Emoji reaction from a participant |
 | `HOST_COMMAND` | Mute/end command from host |
 | `MEETING_ENDED` | Host ended the meeting |
-| `KICKED` | You were removed by the host |
 | `USER_LEFT` | A participant disconnected |
 
 ---
@@ -316,6 +315,3 @@ All business logic is in custom hooks, keeping the page component thin:
 
 ---
 
-## 📝 License
-
-MIT
