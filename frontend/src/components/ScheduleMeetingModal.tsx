@@ -51,17 +51,17 @@ export default function ScheduleMeetingModal({ isOpen, onClose, onScheduled }: S
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-zoom-border bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-800">Schedule Meeting</h2>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 sm:zoom-in duration-200">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-[#eee]">
+          <h2 className="text-[15px] font-bold text-gray-800">Schedule Meeting</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X size={20} />
           </button>
         </div>
         
-        <form onSubmit={handleSchedule} className="p-6">
-          <div className="space-y-5">
+        <form onSubmit={handleSchedule} className="p-5">
+          <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Topic</label>
               <input 
@@ -73,7 +73,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose, onScheduled }: S
               />
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                 <input 
@@ -110,18 +110,18 @@ export default function ScheduleMeetingModal({ isOpen, onClose, onScheduled }: S
             </div>
           </div>
           
-          <div className="mt-8 flex justify-end gap-3 pt-4 border-t border-zoom-border">
+          <div className="mt-6 flex gap-3 pt-4 border-t border-[#eee]">
             <button 
               type="button" 
               onClick={onClose}
-              className="px-6 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors text-sm border border-gray-200"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={loading || !topic.trim()}
-              className="px-6 py-2 rounded-lg font-medium text-white bg-zoom-blue hover:bg-zoom-blue-hover transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="flex-1 sm:flex-none px-6 py-2.5 rounded-lg font-medium text-white bg-[#0b5cff] hover:bg-[#094dd6] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
             >
               {loading ? 'Scheduling...' : 'Save'}
             </button>

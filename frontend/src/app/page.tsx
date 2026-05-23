@@ -10,11 +10,11 @@ import { createMeeting } from "@/lib/api";
 import {
   Video, Plus, Calendar, Home, MessageSquare,
   Users, MoreHorizontal, Settings, Search,
-  Clock, ChevronDown, ChevronLeft, ChevronRight,
-  FileText, Monitor, Star, Bell, Grid, Upload
+  Clock, ChevronLeft, ChevronRight,
+  FileText, Monitor, Star, Bell, Upload, Menu, X
 } from "lucide-react";
 
-// ─── Left Sidebar Nav Item ────────────────────────────
+// ─── Left Sidebar Nav Item ──────────────────────────────────────────────────
 function SideNavItem({
   icon, label, active = false, badge
 }: {
@@ -43,58 +43,39 @@ function SideNavItem({
   );
 }
 
-// ─── Action Button Card ───────────────────────────────
+// ─── Bottom Mobile Nav Item ──────────────────────────────────────────────────
+function BottomNavItem({
+  icon, label, active = false, onClick
+}: {
+  icon: React.ReactNode; label: string; active?: boolean; onClick?: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center justify-center flex-1 py-2 gap-0.5 transition-all
+        ${active ? "text-[#0b5cff]" : "text-[#888]"}`}
+    >
+      {icon}
+      <span className="text-[10px] font-medium leading-none">{label}</span>
+    </button>
+  );
+}
+
+// ─── Action Button Card ─────────────────────────────────────────────────────
 function ActionCard({
   icon, label, color, onClick
 }: {
   icon: React.ReactNode; label: string; color: string; onClick: () => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2.5">
+    <div className="flex flex-col items-center gap-2">
       <button
         onClick={onClick}
-        className={`w-[68px] h-[68px] ${color} rounded-[20px] flex items-center justify-center shadow-sm hover:brightness-90 active:scale-95 transition-all duration-100`}
+        className={`w-14 h-14 sm:w-[68px] sm:h-[68px] ${color} rounded-[18px] sm:rounded-[20px] flex items-center justify-center shadow-sm hover:brightness-90 active:scale-95 transition-all duration-100`}
       >
         {icon}
       </button>
-      <span className="text-[13px] font-medium text-[#333] whitespace-nowrap">{label}</span>
-    </div>
-  );
-}
-
-// ─── Calendar Day Header ──────────────────────────────
-function CalendarHeader({
-  currentTime, onPrev, onNext
-}: {
-  currentTime: Date | null; onPrev: () => void; onNext: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#e5e5e5]">
-      <div className="flex items-center gap-2">
-        <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[#d0d0d0] bg-white hover:bg-gray-50 text-sm font-medium text-[#333] transition-colors"
-        >
-          <div className="w-3 h-3 rounded-sm bg-[#e8f0fe] border border-[#0b5cff] flex items-center justify-center">
-            <div className="w-1.5 h-1.5 bg-[#0b5cff] rounded-sm" />
-          </div>
-          Today
-        </button>
-        <div className="flex items-center gap-0.5">
-          <button onClick={onPrev} className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors">
-            <ChevronLeft size={14} />
-          </button>
-          <button onClick={onNext} className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors">
-            <ChevronRight size={14} />
-          </button>
-        </div>
-      </div>
-      <div className="flex items-center gap-1 text-sm text-[#555]">
-        <span className="font-medium">{currentTime ? format(currentTime, "MMMM d, yyyy") : ""}</span>
-        <ChevronDown size={14} className="text-gray-400" />
-      </div>
-      <button className="text-gray-400 hover:text-gray-600 transition-colors">
-        <MoreHorizontal size={16} />
-      </button>
+      <span className="text-[11px] sm:text-[13px] font-medium text-[#333] whitespace-nowrap text-center">{label}</span>
     </div>
   );
 }
@@ -105,6 +86,7 @@ export default function Dashboard() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [calendarDate, setCalendarDate] = useState(new Date());
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const router = useRouter();
 
   useEffect(() => {
@@ -144,8 +126,21 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-white overflow-hidden" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
 
-      {/* ── Left Sidebar ── */}
-      <aside className="w-[68px] flex-shrink-0 flex flex-col bg-white border-r border-[#e5e5e5] z-20">
+      {/* ── Mobile sidebar overlay ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* ── Left Sidebar — hidden on mobile, shown on lg+ ── */}
+      <aside className={`
+        fixed lg:static inset-y-0 left-0 z-40
+        w-[68px] flex-shrink-0 flex flex-col bg-white border-r border-[#e5e5e5]
+        transform transition-transform duration-200
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}>
         {/* Logo */}
         <div className="h-[54px] flex items-center justify-center border-b border-[#e5e5e5]">
           <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8">
@@ -177,32 +172,40 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top Bar */}
-        <header className="h-[54px] flex-shrink-0 flex items-center justify-between px-5 border-b border-[#e5e5e5] bg-white z-10">
+        <header className="h-[54px] flex-shrink-0 flex items-center justify-between px-4 sm:px-5 border-b border-[#e5e5e5] bg-white z-10">
+          {/* Mobile hamburger + title */}
           <div className="flex items-center gap-2">
+            <button
+              className="lg:hidden p-1.5 rounded-md hover:bg-gray-100 text-gray-500 transition-colors"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
             <span className="text-[13px] font-semibold text-[#333]">Zoom Clone</span>
           </div>
 
-          {/* Search bar */}
-          <div className="flex-1 max-w-[420px] mx-8">
-            <div className="relative">
+          {/* Search bar — hidden on small mobile, visible sm+ */}
+          <div className="hidden sm:flex flex-1 max-w-[320px] lg:max-w-[420px] mx-4 lg:mx-8">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
               <input
                 type="text"
-                placeholder="Search (Ctrl+F)"
+                placeholder="Search"
                 className="w-full pl-9 pr-4 py-1.5 bg-[#f3f3f3] border border-transparent rounded-full text-sm text-[#333] placeholder-gray-400 focus:bg-white focus:border-[#0b5cff] focus:ring-1 focus:ring-[#0b5cff] outline-none transition-all"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Search icon on tiny screens */}
+            <button className="sm:hidden p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+              <Search size={18} />
+            </button>
             <button className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
               <Bell size={18} />
             </button>
-            <button className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
-              <Grid size={18} />
-            </button>
             {/* Avatar */}
-            <div className="w-8 h-8 rounded-full bg-[#0b5cff] flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-[#0b5cff] transition-all ml-1">
+            <div className="w-8 h-8 rounded-full bg-[#0b5cff] flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-[#0b5cff] transition-all ml-0.5">
               PJ
             </div>
           </div>
@@ -210,96 +213,98 @@ export default function Dashboard() {
 
         {/* ── Body ── */}
         <main className="flex-1 overflow-y-auto bg-[#f7f7f7]">
-          <div className="max-w-[860px] mx-auto px-6 py-8">
+          {/* Add bottom padding on mobile to clear the bottom nav bar */}
+          <div className="max-w-[860px] mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-24 lg:pb-8">
 
             {/* Time display */}
-            <div className="text-center mb-8">
-              <div className="text-[56px] font-light text-[#222] leading-none tracking-tight">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="text-[42px] sm:text-[56px] font-light text-[#222] leading-none tracking-tight">
                 {currentTime ? format(currentTime, "HH:mm") : "--:--"}
               </div>
-              <div className="text-[15px] text-[#666] mt-1.5 font-normal">
+              <div className="text-[13px] sm:text-[15px] text-[#666] mt-1.5 font-normal">
                 {currentTime ? format(currentTime, "EEEE, MMMM d, yyyy") : ""}
               </div>
             </div>
 
-            {/* Action buttons row */}
-            <div className="flex justify-center gap-8 mb-10">
+            {/* Action buttons row — 3 cols on tiny, 5 on sm+ */}
+            <div className="grid grid-cols-3 sm:flex sm:justify-center gap-4 sm:gap-8 mb-8 sm:mb-10 px-2 sm:px-0">
               <ActionCard
-                icon={<Video size={30} className="text-white" fill="white" />}
+                icon={<Video size={26} className="text-white" fill="white" />}
                 label="New meeting"
                 color="bg-[#ff742e]"
                 onClick={handleNewMeeting}
               />
               <ActionCard
-                icon={<Plus size={34} className="text-white" strokeWidth={2.5} />}
+                icon={<Plus size={30} className="text-white" strokeWidth={2.5} />}
                 label="Join"
                 color="bg-[#0b5cff]"
                 onClick={() => setIsJoinOpen(true)}
               />
               <ActionCard
-                icon={<Calendar size={28} className="text-white" />}
+                icon={<Calendar size={24} className="text-white" />}
                 label="Schedule"
                 color="bg-[#0b5cff]"
                 onClick={() => setIsScheduleOpen(true)}
               />
-              <ActionCard
-                icon={<Monitor size={26} className="text-white" />}
-                label="Share screen"
-                color="bg-[#0b5cff]"
-                onClick={() => {}}
-              />
-              <ActionCard
-                icon={<FileText size={26} className="text-white" />}
-                label="My notes"
-                color="bg-[#0b5cff]"
-                onClick={() => {}}
-              />
+              {/* Hide last two cards on tiny screens to keep 3-per-row clean */}
+              <div className="hidden sm:block">
+                <ActionCard
+                  icon={<Monitor size={22} className="text-white" />}
+                  label="Share screen"
+                  color="bg-[#0b5cff]"
+                  onClick={() => {}}
+                />
+              </div>
+              <div className="hidden sm:block">
+                <ActionCard
+                  icon={<FileText size={22} className="text-white" />}
+                  label="My notes"
+                  color="bg-[#0b5cff]"
+                  onClick={() => {}}
+                />
+              </div>
             </div>
 
             {/* Calendar/Meetings section */}
             <div className="bg-white rounded-xl border border-[#e5e5e5] shadow-sm overflow-hidden">
-              {/* Header: + Today [<] [>] · date · ··· */}
-              <div className="flex items-center justify-between px-5 py-3 border-b border-[#e5e5e5]">
+              {/* Header bar */}
+              <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[#e5e5e5]">
                 <button
                   onClick={() => setIsScheduleOpen(true)}
                   className="flex items-center gap-1.5 text-[#0b5cff] hover:text-[#094dd6] text-sm font-medium transition-colors"
                 >
                   <Plus size={16} />
+                  <span className="hidden sm:inline">Schedule</span>
                 </button>
-                <div className="flex items-center gap-2">
-                  <CalendarHeader
-                    currentTime={calendarDate}
-                    onPrev={goToPrevDay}
-                    onNext={goToNextDay}
-                  />
-                </div>
-              </div>
 
-              {/* Today sub-bar */}
-              <div className="flex items-center gap-2 px-5 py-2.5 border-b border-[#eee] bg-[#fafafa]">
-                <button className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-[#ddd] bg-white hover:bg-gray-50 text-xs font-medium text-[#333] transition-colors">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#e8f0fe] border border-[#0b5cff]" />
+                {/* Date navigator */}
+                <div className="flex items-center gap-1.5">
+                  <button onClick={goToPrevDay} className="p-1.5 rounded hover:bg-gray-100 text-gray-400 transition-colors">
+                    <ChevronLeft size={14} />
+                  </button>
+                  <span className="text-[13px] font-medium text-[#444] min-w-[120px] sm:min-w-[160px] text-center">
+                    {calendarDate ? format(calendarDate, "EEE, MMM d, yyyy") : ""}
+                  </span>
+                  <button onClick={goToNextDay} className="p-1.5 rounded hover:bg-gray-100 text-gray-400 transition-colors">
+                    <ChevronRight size={14} />
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => { setCalendarDate(new Date()); }}
+                  className="text-xs font-medium px-2.5 py-1 rounded border border-[#d0d0d0] text-[#333] hover:bg-gray-50 transition-colors"
+                >
                   Today
-                </button>
-                <button onClick={goToPrevDay} className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
-                  <ChevronLeft size={14} />
-                </button>
-                <button onClick={goToNextDay} className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
-                  <ChevronRight size={14} />
-                </button>
-                <span className="flex-1" />
-                <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <MoreHorizontal size={16} />
                 </button>
               </div>
 
               {/* Meetings list */}
-              <div className="min-h-[280px]">
+              <div className="min-h-[240px] sm:min-h-[280px]">
                 <UpcomingMeetings key={refreshTrigger} />
               </div>
 
-              {/* Open recordings footer */}
-              <div className="border-t border-[#e5e5e5] px-5 py-3">
+              {/* Footer */}
+              <div className="border-t border-[#e5e5e5] px-4 sm:px-5 py-3">
                 <button className="flex items-center gap-1.5 text-sm text-[#333] hover:text-[#0b5cff] font-medium transition-colors group">
                   <Monitor size={15} className="text-gray-400 group-hover:text-[#0b5cff] transition-colors" />
                   Open recordings
@@ -311,6 +316,21 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+
+      {/* ── Mobile Bottom Nav bar (replaces sidebar on phones) ── */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 flex bg-white border-t border-[#e5e5e5] safe-area-inset-bottom">
+        <BottomNavItem icon={<Home size={20} />} label="Home" active />
+        <BottomNavItem icon={<MessageSquare size={20} />} label="Chat" />
+        <BottomNavItem
+          icon={<div className="w-10 h-10 bg-[#0b5cff] rounded-full flex items-center justify-center -mt-4 shadow-lg">
+            <Video size={18} className="text-white" fill="white" />
+          </div>}
+          label=""
+          onClick={handleNewMeeting}
+        />
+        <BottomNavItem icon={<Users size={20} />} label="Contacts" />
+        <BottomNavItem icon={<Settings size={20} />} label="Settings" />
+      </nav>
 
       {/* Modals */}
       <JoinMeetingModal isOpen={isJoinOpen} onClose={() => setIsJoinOpen(false)} />
